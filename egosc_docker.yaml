@@ -1,0 +1,130 @@
+heat_template_version: 2013-05-23
+
+description: >
+  A document-based template to configure your Software Defined Environment.
+
+parameters:
+  # declaration of input parameters
+  external_network_id:
+    type: string
+    description: Load Balancer Pool Subnet ID
+    default: d2bdc5aa-c204-415a-b840-11a89312eb36
+  flavor:
+    type: string
+    description: Flavor to be used for compute instance
+    default: "m1.small"
+  image:
+    type: string
+    description: Image used for servers
+    default: lbaas
+  private_subnet_id:
+    type: string
+    description: network on which the instances
+    default: ecf36a0f-782d-4b19-a262-eb55234e9b87
+
+resources:
+  # declaration of template resources
+  ag_php:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 3
+      max_size: 5
+      resource:
+        type: egosc_docker_php.yaml
+        properties:
+          pool_id: { get_resource: lbp_php }
+          image: { get_param: image }
+          flavor: { get_param: flavor }
+          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+
+  ag_redis_slave:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 2
+      max_size: 4
+      resource:
+        type: egosc_docker_redis_slave.yaml
+        properties:
+          pool_id: { get_resource: lb_redis_slave }
+          image: { get_param: image }
+          flavor: { get_param: flavor }
+          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+
+  ag_redis_master:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 1
+      max_size: 2
+      resource:
+        type: egosc_docker_redis_master.yaml
+        properties:
+          pool_id: { get_resource: lbp_redis_master }
+          image: { get_param: image }
+          flavor: { get_param: flavor }
+          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+
+  lb_php:
+    type: OS::Neutron::LoadBalancer
+    properties:
+      protocol_port: 80
+      pool_id: {get_resource: lbp_php}
+  lbp_php:
+    type: OS::Neutron::Pool
+    properties:
+      protocol: HTTP
+      monitors: [{get_resource: lbm_php}]
+      lb_method: ROUND_ROBIN
+      subnet_id: {get_param: private_subnet_id}
+      vip:
+        protocol_port: 80
+  lbm_php:
+    type: OS::Neutron::HealthMonitor
+    properties:
+      type: TCP
+      delay: 3
+      max_retries: 5
+      timeout: 5
+
+  lb_redis_slave:
+    type: OS::Neutron::LoadBalancer
+    properties:
+      protocol_port: 6379
+      pool_id: {get_resource: lbp_redis_slave}
+  lbp_redis_slave:
+    type: OS::Neutron::Pool
+    properties:
+      protocol: TCP
+      monitors: [{get_resource: lbm_redis_slave}]
+      lb_method: ROUND_ROBIN
+      subnet_id: {get_param: private_subnet_id}
+      vip:
+        protocol_port: 6379
+  lbm_redis_slave:
+    type: OS::Neutron::HealthMonitor
+    properties:
+      type: TCP
+      delay: 3
+      max_retries: 5
+      timeout: 5
+
+  lb_redis_master:
+    type: OS::Neutron::LoadBalancer
+    properties:
+      protocol_port: 6379
+      pool_id: {get_resource: lbp_redis_master}
+  lbp_redis_master:
+    type: OS::Neutron::Pool
+    properties:
+      protocol: TCP
+      monitors: [{get_resource: lbm_redis_master}]
+      lb_method: ROUND_ROBIN
+      subnet_id: {get_param: private_subnet_id}
+      vip:
+        protocol_port: 6379
+  lbm_redis_master:
+    type: OS::Neutron::HealthMonitor
+    properties:
+      type: TCP
+      delay: 3
+      max_retries: 5
+      timeout: 5
