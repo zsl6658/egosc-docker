@@ -35,7 +35,7 @@ resources:
           pool_id: { get_resource: lbp_php }
           image: { get_param: image }
           flavor: { get_param: flavor }
-          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+          metadata: {"lb_redis_slave": {get_param: lb_redis_slave}}
 
   ag_redis_slave:
     type: OS::Heat::AutoScalingGroup
@@ -48,7 +48,7 @@ resources:
           pool_id: { get_resource: lb_redis_slave }
           image: { get_param: image }
           flavor: { get_param: flavor }
-          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+          metadata: {"lb_redis_master": {get_param: lb_redis_master}}
 
   ag_redis_master:
     type: OS::Heat::AutoScalingGroup
@@ -61,7 +61,6 @@ resources:
           pool_id: { get_resource: lbp_redis_master }
           image: { get_param: image }
           flavor: { get_param: flavor }
-          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
 
   lb_php:
     type: OS::Neutron::LoadBalancer
