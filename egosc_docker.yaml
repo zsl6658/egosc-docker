@@ -71,18 +71,11 @@ resources:
     type: OS::Neutron::Pool
     properties:
       protocol: HTTP
-      monitors: [{get_resource: lbm_php}]
+      monitors: [{get_resource: load_balance_moniter}]
       lb_method: ROUND_ROBIN
       subnet_id: {get_param: private_subnet_id}
       vip:
         protocol_port: 80
-  lbm_php:
-    type: OS::Neutron::HealthMonitor
-    properties:
-      type: TCP
-      delay: 3
-      max_retries: 5
-      timeout: 5
 
   lb_redis_slave:
     type: OS::Neutron::LoadBalancer
@@ -93,18 +86,11 @@ resources:
     type: OS::Neutron::Pool
     properties:
       protocol: TCP
-      monitors: [{get_resource: lbm_redis_slave}]
+      monitors: [{get_resource: load_balance_moniter}]
       lb_method: ROUND_ROBIN
       subnet_id: {get_param: private_subnet_id}
       vip:
         protocol_port: 6379
-  lbm_redis_slave:
-    type: OS::Neutron::HealthMonitor
-    properties:
-      type: TCP
-      delay: 3
-      max_retries: 5
-      timeout: 5
 
   lb_redis_master:
     type: OS::Neutron::LoadBalancer
@@ -115,12 +101,13 @@ resources:
     type: OS::Neutron::Pool
     properties:
       protocol: TCP
-      monitors: [{get_resource: lbm_redis_master}]
+      monitors: [{get_resource: load_balance_moniter}]
       lb_method: ROUND_ROBIN
       subnet_id: {get_param: private_subnet_id}
       vip:
         protocol_port: 6379
-  lbm_redis_master:
+
+  load_balance_moniter:
     type: OS::Neutron::HealthMonitor
     properties:
       type: TCP
