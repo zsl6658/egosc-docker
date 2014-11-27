@@ -1,0 +1,56 @@
+heat_template_version: 2013-05-23
+
+description: >
+  A document-based template to configure your Software Defined Environment.
+
+parameters:
+  # declaration of input parameters
+  availability_zone:
+    type: string
+    description: AZ for the Docker instances
+    default: docker
+  flavor:
+    type: string
+    description: Generated to reference pool
+    default: "m1.small"
+  pool_id:
+    type: string
+    description: Generated to reference pool
+  image:
+    type: string
+    description: Generated to reference pool
+  metadata:
+    type: json
+
+
+resources:
+  redis_master:
+    type: IBMInc::EGO::Activity
+    properties:
+      description: 'redis master'
+      svc_name: 'redis_master'
+      control_policy: {
+        start_type: 'AUTOMATIC',
+        max_restarts: 10
+      }
+      allocation_specification: {
+        consumer_id: '/ManagementServices/EGOManagementServices',
+        resource_specification: {
+          resource_group: 'ManagementHosts',
+          resource_requirement: 'select(!NTIA64 &amp;&amp; !SOL64)',
+        }
+      }
+      activity_description: {
+        htype: 'all',
+        activity_specification: {
+          command: 'sleep 10000',
+          job_controller: 'sleep 10000'
+        }
+      }
+
+  php_pool_member:
+    type: OS::Neutron::PoolMember
+    properties:
+      address: { get_attr: [redis_master, first_address] }
+      pool_id: { get_param: pool_id }
+      protocol_port: 6379
