@@ -43,8 +43,8 @@ resources:
       activity_description: {
         htype: 'all',
         activity_specification: {
-          command: 'sleep 10000',
-          job_controller: 'sleep 10000'
+          command: 'start_container.py',
+          job_controller: 'stop_container.sh'
         }
       }
 
