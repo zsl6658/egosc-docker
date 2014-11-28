@@ -33,9 +33,10 @@ resources:
         type: egosc_docker_php.yaml
         properties:
           pool_id: { get_resource: lbp_php }
+          private_subnet_id: { get_param: private_subnet_id }
           image: { get_param: image }
           flavor: { get_param: flavor }
-          metadata: {"lb_redis_slave": {get_param: lb_redis_slave}}
+          metadata: {"lb_redis_slave": {get_resource: lb_redis_slave}}
 
   ag_redis_slave:
     type: OS::Heat::AutoScalingGroup
@@ -46,9 +47,10 @@ resources:
         type: egosc_docker_redis_slave.yaml
         properties:
           pool_id: { get_resource: lb_redis_slave }
+          private_subnet_id: { get_param: private_subnet_id }
           image: { get_param: image }
           flavor: { get_param: flavor }
-          metadata: {"lb_redis_master": {get_param: lb_redis_master}}
+          metadata: {"lb_redis_master": {get_resource: lb_redis_master}}
 
   ag_redis_master:
     type: OS::Heat::AutoScalingGroup
@@ -59,6 +61,7 @@ resources:
         type: egosc_docker_redis_master.yaml
         properties:
           pool_id: { get_resource: lbp_redis_master }
+          private_subnet_id: { get_param: private_subnet_id }
           image: { get_param: image }
           flavor: { get_param: flavor }
 
