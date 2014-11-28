@@ -16,9 +16,16 @@ parameters:
   pool_id:
     type: string
     description: Generated to reference pool
+  private_subnet_id:
+    type: string
+    description: Generated to reference pool
   image:
     type: string
     description: Generated to reference pool
+  ego_top:
+    type: string
+    description: Generated to reference pool
+    default: "/opt/ibm/ego"
   metadata:
     type: json
 
@@ -43,8 +50,15 @@ resources:
       activity_description: {
         htype: 'all',
         activity_specification: {
-          command: 'start_container.py',
-          job_controller: 'stop_container.sh'
+          command: '${ego_top}/start_container.py',
+          job_controller: '${ego_top}/stop_container.sh',
+          environment: {
+            'pool_id': {get_param: pool_id},
+            'private_subnet_id': {get_param: private_subnet_id},
+            'flavor': {get_param: flavor},
+            'image': {get_param: image},
+            'ego_top': {get_param: ego_top},
+          }
         }
       }
 
