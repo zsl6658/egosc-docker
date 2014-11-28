@@ -1,0 +1,67 @@
+heat_template_version: 2013-05-23
+
+description: >
+  A document-based template to configure your Software Defined Environment.
+
+parameters:
+  # declaration of input parameters
+  external_network_id:
+    type: string
+    description: Load Balancer Pool Subnet ID
+    default: d2bdc5aa-c204-415a-b840-11a89312eb36
+  flavor:
+    type: string
+    description: Flavor to be used for compute instance
+    default: "m1.small"
+  image:
+    type: string
+    description: Image used for servers
+    default: lbaas
+
+resources:
+  resource1:
+    type: IBMInc::EGO::Activity
+    properties:
+      description: 'php web server'
+      svc_name: 'resource1'
+      control_policy: {
+        start_type: 'AUTOMATIC',
+        max_restarts: 10
+      }
+      allocation_specification: {
+        consumer_id: '/ClusterServices/EGOClusterServices',
+        resource_specification: {
+          resource_group: 'InternalResourceGroup',
+          resource_requirement: '',
+        }
+      }
+      activity_description: {
+        htype: 'all',
+        activity_specification: {
+          command: 'sleep 10000',
+          job_controller: 'sleep 10000'
+        }
+      }
+  resource2:
+    type: IBMInc::EGO::Activity
+    properties:
+      description: {get_attr: [resource1, ipv4]} 
+      svc_name: 'resource2' 
+      control_policy: {
+        start_type: 'AUTOMATIC',
+        max_restarts: 10
+      }
+      allocation_specification: {
+        consumer_id: '/ClusterServices/EGOClusterServices',
+        resource_specification: {
+          resource_group: 'InternalResourceGroup',
+          resource_requirement: '',
+        }
+      }
+      activity_description: {
+        htype: 'all',
+        activity_specification: {
+          command: 'sleep 10000',
+          job_controller: 'sleep 10000'
+        }
+      }
