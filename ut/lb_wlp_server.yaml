@@ -4,34 +4,25 @@ parameters:
   flavor:
     type: string
     description: flavor used by the servers
-    default: my_flavor_xxx
   image:
     type: string
     description: Image used for servers
-    default: image_xxxxx
   key_name:
     type: string
     description: SSH key to connect to the servers
-    default: ssh_key_xxxx
   private_net_id:
     type: string
-    default: net_id_xxxxx
   pool_id:
     type: string
     description: Pool to contact
-    default: 11111
   scheduler_hints:
     type: json
-    default: {'a': 'aa'}
   chef_server_url:
     type: string
-    default: http://127.0.0.1
   nameserver:
     type: string
-    default: myserver
   db2_server_name:
     type: string
-    default: db2_server
 
 resources:
   wlp_server:
@@ -68,4 +59,20 @@ resources:
           source: emptyDir 
           emptyDir: {}
       network_id: {get_param: private_net_id}
+      control_policy:        
+        dependencies:
+          - type: 'OnStart'
+            satisfy: 'STARTED'
+            keep: 'STARTED'
+            autoStart: false
+            activity: { get_param: xxx }
+
+  member:
+    type: OS::Neutron::PoolMember
+    properties:
+      pool_id: {get_param: pool_id}
+      address: {get_attr: [wlp_server, first_address]}
+      protocol_port: 9080
+
+
 

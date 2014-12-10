@@ -69,3 +69,4 @@ resources:
           emptyDir: {}
       network_id: {get_param: private_net_id}
 
+
