@@ -1,0 +1,86 @@
+heat_template_version: 2013-05-23
+description: Web App Pattern
+parameters:
+  key_name:
+    type: string
+    default: key_name_xxx
+  flavor:
+    type: string
+    default: flavor_xxx
+  private_net_id:
+    type: string
+    description: ID of private network into which servers get deployed
+    default: private_net_id_xxx
+  private_subnet_id:
+    type: string
+    description: ID of private sub network into which servers get deployed
+    default: private_subnet_id_xxx
+  public_net_id:
+    type: string
+    description: ID of public network for which floating IP addresses will be allocated
+    default: public_subnet_id_xxx
+  chef_server_url:
+    type: string
+    default: chef_server_url_xxx
+  nameserver:
+    type: string 
+    default: nameserver_xxx
+
+resources:
+  wlp_server_group:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 1
+      desired_capacity: 2
+      max_size: 10
+      resource:
+        type: IBMInc::EGO::Activity
+        properties:
+          containers:
+            - description: "db2 server"
+              name: "db2"
+              flavor: {get_param: flavor}
+              image: dockerfile/db2
+              ports:
+                - containerPort: 8083
+              volumeMounts:
+                - name: db-data
+                  mountPath: /srv/db2
+              env:
+                - name: key_name
+                  value: {get_param: key_name}
+                - name: nameserver
+                  value: { get_param: nameserver }
+                - name: chef_server_url
+                  value: { get_param: chef_server_url }
+              network_id: {get_param: private_net_id}
+              stdout_file: '/tmp/a'
+              stderr_file: '/tmp/b'
+          volumes:
+            - name: db-data
+              source: HostDir
+              hostDir:
+                path: /mnt/share/db2
+          control_policy:
+            host_failover_intervel: 60
+            failover_fencing: '$fencing_script_path'
+            failover_fencing_wait_period: 120
+          scheduler_hints: '[">=","$free_ram_mb",1024, "==","$name", "host1"]'
+          monitor: '/opt/bin/Monitor.sh'
+          monitor_max_update_interval: 60
+
+  web_server_scaleup_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: wlp_server_group}
+      cooldown: 60
+      scaling_adjustment: 1
+
+  web_server_scaledown_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: wlp_server_group}
+      cooldown: 60
+      scaling_adjustment: -1

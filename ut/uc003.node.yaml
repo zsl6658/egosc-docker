@@ -1,0 +1,61 @@
+heat_template_version: 2013-05-23
+description: A load-balancer server
+parameters:
+  flavor:
+    type: string
+    description: flavor used by the servers
+  image:
+    type: string
+    description: Image used for servers
+  key_name:
+    type: string
+    description: SSH key to connect to the servers
+  private_net_id:
+    type: string
+  pool_id:
+    type: string
+    description: Pool to contact
+  scheduler_hints:
+    type: json
+  chef_server_url:
+    type: string
+  nameserver:
+    type: string
+  db2_server_name:
+    type: string
+
+resources:
+  wlp_server:
+    type: IBMInc::EGO::Activity
+    properties:
+      containers:
+        - description: "web server"
+          name: web-server
+          flavor: {get_param: flavor}
+          image: dockerfile/nginx
+          scheduler_hints: {get_param: scheduler_hints}
+          ports:
+            - containerPort: 9080
+          volumeMounts:
+            - name: www-data
+              mountPath: /srv/www
+          env:
+            - name: DB2SERVERNAME
+              value: { get_param: db2_server_name }
+            - name: nameserver
+              value: { get_param: nameserver }
+            - name: chef_server_url
+              value: { get_param: chef_server_url }
+        - description: 'git monitor'
+          name: git-monitor
+          image: kubernetes/git-monitor
+          memory: 200m
+          cpu: 2
+          volumeMounts:
+            - name: www-data
+              mountPath: /data
+      volumes:
+        - name: string
+          source: emptyDir 
+          emptyDir: {}
+      network_id: {get_param: private_net_id}

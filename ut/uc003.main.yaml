@@ -1,0 +1,66 @@
+heat_template_version: 2013-05-23
+description: Web App Pattern
+parameters:
+  key_name:
+    type: string
+    default: key_name_xxx
+  flavor:
+    type: string
+    default: flavor_xxx
+  private_net_id:
+    type: string
+    description: ID of private network into which servers get deployed
+    default: net_id_xxx
+  private_subnet_id:
+    type: string
+    description: ID of private sub network into which servers get deployed
+    default: sub_net_id_xxx
+  public_net_id:
+    type: string
+    description: >
+      ID of public network for which floating IP addresses will be allocated
+    defalt: public_net_id_xxx
+  chef_server_url:
+    type: string
+    default: chef_server_url_xxx
+  nameserver:
+    type: string 
+    default: nameserver_xxx
+
+resources:
+  wlp_server_group:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 1
+      desired_capacity: 2
+      max_size: 10
+      resource:
+        type: uc003.node.yaml
+          properties:
+            flavor: {get_param: flavor}
+            image: {get_param: image}
+            key_name: {get_param: key_name}
+            pool_id: {get_resource: pool}
+            metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+            db2_server_name: db2_server
+            scheduler_hints: {} 
+            nameserver: { get_param: nameserver }
+            chef_server_url: { get_param: chef_server_url }	
+            network_id: {get_param: private_net_id}
+
+  web_server_scaleup_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: wlp_server_group}
+      cooldown: 60
+      scaling_adjustment: 1
+
+  web_server_scaledown_policy:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      adjustment_type: change_in_capacity
+      auto_scaling_group_id: {get_resource: wlp_server_group}
+      cooldown: 60
+      scaling_adjustment: -1
+
