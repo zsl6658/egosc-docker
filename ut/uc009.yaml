@@ -1,0 +1,63 @@
+heat_template_version: 2013-05-23
+description: A load-balancer server
+parameters:
+  flavor:
+    type: string
+    description: flavor used by the servers
+    default: my_flavor_xxx
+  image:
+    type: string
+    description: Image used for servers
+    default: image_xxxxx
+  key_name:
+    type: string
+    description: SSH key to connect to the servers
+    default: ssh_key_xxxx
+  private_net_id:
+    type: string
+    default: net_id_xxxxx
+  pool_id:
+    type: string
+    description: Pool to contact
+    default: 11111
+  scheduler_hints:
+    type: json
+    default: {'a': 'aa'}
+  chef_server_url:
+    type: string
+    default: http://127.0.0.1
+  nameserver:
+    type: string
+    default: myserver
+  db2_server_name:
+    type: string
+    default: db2_server
+
+resources:
+  wlp_server:
+    type: IBMInc::EGO::Activity
+    properties:
+      containers:
+        - description: "web server"
+          name: web-server
+          image: dockerfile/nginx
+          cpu: 1
+          memory: 512000
+          scheduler_hints: {get_param: scheduler_hints}
+          ports:
+            - containerPort: 9080
+          volumeMounts:
+            - name: www-data
+              mountPath: /srv/www
+          env:
+            - name: DB2SERVERNAME
+              value: { get_param: db2_server_name }
+            - name: nameserver
+              value: { get_param: nameserver }
+            - name: chef_server_url
+              value: { get_param: chef_server_url }
+      volumes:
+        - name: string
+          source: emptyDir 
+          emptyDir: {}
+      network_id: {get_param: private_net_id}
