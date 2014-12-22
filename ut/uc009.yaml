@@ -43,6 +43,8 @@ resources:
           image: dockerfile/nginx
           cpu: 1
           memory: 512000
+          stdout_file: /tmp/out.log
+          stderr_file: /tmp/err.log
           scheduler_hints: {get_param: scheduler_hints}
           ports:
             - containerPort: 9080
