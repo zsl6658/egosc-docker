@@ -1,0 +1,48 @@
+heat_template_version: 2013-05-23
+description: EGO activity template to show a complete use case with all possible parameters
+
+resources:
+  my_activity:
+    type: IBMInc::EGO::Activity
+    properties:
+      containers:
+        - description: "db2 server"
+          name: "db2"
+          image: dockerfile/db2
+          cpu: 1
+          memory: 1024
+          ports:
+            - container_port: 8083
+          volumeMounts:
+            - name: db-data
+              mountPath: /srv/db2
+          env:
+            - name: key_name
+              value: value1
+            - name: nameserver
+              value: value2
+            - name: chef_server_url
+              value: value3
+          stdout_file: '/tmp/a'
+          stderr_file: '/tmp/b'
+      volumes:
+        - name: db-data
+          source: HostDir
+          path: /mnt/share/db2
+      control_policy:
+        host_failover_intervel: 60
+        failover_fencing: '$fencing_script_path'
+        failover_fencing_wait_period: 120
+        dependencies:
+          - dep_type: 'OnStart'
+            satisfy: 'STARTED'
+            keep: 'STARTED'
+            auto_start: false
+            dep_name: 'service1'
+        block_host_exit_values:
+          - exit_value: 'a'
+          - exit_value: 'b
+      scheduler_hints: '[">=","$free_ram_mb",1024, "==","$name", "host1"]'
+      keep_block_host_list: 'host1;host2;'
+      network_id: 'xxxx'
+      monitor_max_update_interval: 60
