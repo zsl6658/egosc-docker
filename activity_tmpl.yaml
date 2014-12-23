@@ -40,9 +40,10 @@ resources:
             auto_start: false
             dep_name: 'service1'
         block_host_exit_values:
-          - exit_value: 'a'
-          - exit_value: 'b'
+          - exit_value: 1
+          - exit_value: 255
       scheduler_hints: '[">=","$free_ram_mb",1024, "==","$name", "host1"]'
       keep_block_host_list: 'host1;host2;'
       network_id: 'xxxx'
+      sub_network_id: 'yyy'
       monitor_max_update_interval: 60
