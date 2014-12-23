@@ -41,7 +41,7 @@ resources:
             dep_name: 'service1'
         block_host_exit_values:
           - exit_value: 'a'
-          - exit_value: 'b
+          - exit_value: 'b'
       scheduler_hints: '[">=","$free_ram_mb",1024, "==","$name", "host1"]'
       keep_block_host_list: 'host1;host2;'
       network_id: 'xxxx'
