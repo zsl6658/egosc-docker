@@ -35,8 +35,11 @@ resources:
         failover_fencing_wait_period: 120
         dependencies:
           - dep_type: 'OnStart'
-            satisfy: 'STARTED'
-            keep: 'STARTED'
+            satisfy:
+              - state: 'STARTED'
+            keep:
+              - state: 'INIT'
+              - state: 'STARTED'
             auto_start: false
             dep_name: 'service1'
         block_host_exit_values:
