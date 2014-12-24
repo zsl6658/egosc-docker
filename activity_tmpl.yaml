@@ -13,7 +13,7 @@ resources:
           memory: 1024
           ports:
             - container_port: 8083
-          volumeMounts:
+          volume_mounts:
             - name: db-data
               mountPath: /srv/db2
           env:
@@ -46,4 +46,3 @@ resources:
       keep_block_host_list: 'host1;host2;'
       network_id: 'xxxx'
       sub_network_id: 'yyy'
-      monitor_max_update_interval: 60
