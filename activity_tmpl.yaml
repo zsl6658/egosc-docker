@@ -15,7 +15,7 @@ resources:
             - container_port: 8083
           volume_mounts:
             - name: db-data
-              mountPath: /srv/db2
+              mount_path: /srv/db2
           env:
             - name: key_name
               value: value1
