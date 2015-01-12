@@ -21,8 +21,8 @@ parameters:
     description: Pool to contact
     default: 11111
   scheduler_hints:
-    type: json
-    default: {'a': 'aa'}
+    type: string
+    default: '[">=","$mem", "10", ">=","$ncpus", "1"]'
   chef_server_url:
     type: string
     default: http://127.0.0.1
@@ -65,8 +65,8 @@ resources:
               mount_path: /data
       volumes:
         - name: string
-          source: emptyDir 
-          emptyDir: {}
+          source: EmptyDir
+          path: /
       network_id: {get_param: private_net_id}
       scheduler_hints: {get_param: scheduler_hints}
 
