@@ -11,17 +11,11 @@
                 <ego:DockerNetworkVariables name="SubNetID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:DockerNetworkVariables>
             </ego:DockerNetwork>
             <ego:DockerContainer>
-                <ego:DockerContainerDescription>desc</ego:DockerContainerDescription>
-                <!-- new added element -->
                 <ego:DockerContainerName>myContainer1</ego:DockerContainerName>
                 <ego:DockerContainerImage>dockerfile/db2</ego:DockerContainerImage>
                 <ego:DockerContainerRegistryURL>imgeURL1</ego:DockerContainerRegistryURL>
                 <ego:DockerContainerCPUShares>2</ego:DockerContainerCPUShares>
                 <ego:DockerContainerMemoryLimit>1024</ego:DockerContainerMemoryLimit>
-                <ego:stdOutFile>/tmp/log</ego:stdOutFile>
-                <!-- new added element -->
-                <ego:stdErrFile>/tmp/err</ego:stdErrFile>
-                <!-- new added element -->
                 <ego:DockerContainerVolume>
                     <ego:DockerContainerVolumesHostDir>/host/container1</ego:DockerContainerVolumesHostDir>
                     <ego:DockerContainerdir>/Container</ego:DockerContainerdir>
