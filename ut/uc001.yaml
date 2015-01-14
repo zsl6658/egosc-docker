@@ -66,6 +66,6 @@ resources:
           source: EmptyDir
           path: /
       network_id: {get_param: private_net_id}
-      scheduler_hints: {get_param: scheduler_hints}
+      scheduler_hints: {resource_requirement: {get_param: scheduler_hints}}
 
 
