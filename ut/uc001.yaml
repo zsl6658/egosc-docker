@@ -38,8 +38,7 @@ resources:
     type: IBMInc::EGO::Activity
     properties:
       containers:
-        - description: "web server"
-          name: web-server
+        - name: web-server
           cpu: 1
           memory: 256
           image: dockerfile/nginx
@@ -55,8 +54,7 @@ resources:
               value: { get_param: nameserver }
             - name: chef_server_url
               value: { get_param: chef_server_url }
-        - description: 'git monitor'
-          name: git-monitor
+        - name: git-monitor
           image: kubernetes/git-monitor
           memory: 200
           cpu: 2
