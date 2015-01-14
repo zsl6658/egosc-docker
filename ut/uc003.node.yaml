@@ -29,16 +29,15 @@ resources:
     type: IBMInc::EGO::Activity
     properties:
       containers:
-        - description: "web server"
-          name: web-server
-          flavor: {get_param: flavor}
+        - name: web-server
+          cpu: 1
+          memory: 256
           image: dockerfile/nginx
-          scheduler_hints: {get_param: scheduler_hints}
           ports:
-            - containerPort: 9080
-          volumeMounts:
+            - container_port: 9080
+          volume_mounts:
             - name: www-data
-              mountPath: /srv/www
+              mount_path: /srv/www
           env:
             - name: DB2SERVERNAME
               value: { get_param: db2_server_name }
@@ -46,16 +45,15 @@ resources:
               value: { get_param: nameserver }
             - name: chef_server_url
               value: { get_param: chef_server_url }
-        - description: 'git monitor'
-          name: git-monitor
+        - name: git-monitor
           image: kubernetes/git-monitor
-          memory: 200m
+          memory: 200
           cpu: 2
-          volumeMounts:
+          volume_mounts:
             - name: www-data
-              mountPath: /data
+              mount_path: /data
       volumes:
         - name: string
-          source: emptyDir 
-          emptyDir: {}
+          source: EmptyDir 
+          path: /
       network_id: {get_param: private_net_id}
