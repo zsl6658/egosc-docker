@@ -6,8 +6,7 @@ resources:
     type: IBMInc::EGO::Activity
     properties:
       containers:
-        - description: "db2 server"
-          name: "db2"
+        - name: "db2"
           image: dockerfile/db2
           cpu: 1
           memory: 1024
@@ -23,8 +22,6 @@ resources:
               value: value2
             - name: chef_server_url
               value: value3
-          stdout_file: '/tmp/a'
-          stderr_file: '/tmp/b'
       volumes:
         - name: db-data
           source: HostDir
