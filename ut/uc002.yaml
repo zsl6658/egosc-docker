@@ -61,7 +61,7 @@ resources:
             host_failover_intervel: 60
             failover_fencing: '$fencing_script_path'
             failover_fencing_wait_period: 120
-          scheduler_hints: '[">=","$mem", "10", ">=","$ncpus", "1"]'
+          scheduler_hints: {resource_requirement: '[">=","$mem", "10", ">=","$ncpus", "1"]'}
           network_id: {get_param: private_net_id}
 
   web_server_scaleup_policy:
