@@ -4,6 +4,9 @@ parameters:
   key_name:
     type: string
     default: key_name_xxx
+  image:
+    type: string
+    default: dockerfile/nginx
   flavor:
     type: string
     default: flavor_xxx
@@ -19,7 +22,7 @@ parameters:
     type: string
     description: >
       ID of public network for which floating IP addresses will be allocated
-    defalt: public_net_id_xxx
+    default: public_net_id_xxx
   chef_server_url:
     type: string
     default: chef_server_url_xxx
@@ -36,17 +39,17 @@ resources:
       max_size: 10
       resource:
         type: uc003.node.yaml
-          properties:
-            flavor: {get_param: flavor}
-            image: {get_param: image}
-            key_name: {get_param: key_name}
-            pool_id: {get_resource: pool}
-            metadata: {"metering.stack": {get_param: "OS::stack_id"}}
-            db2_server_name: db2_server
-            scheduler_hints: {} 
-            nameserver: { get_param: nameserver }
-            chef_server_url: { get_param: chef_server_url }	
-            network_id: {get_param: private_net_id}
+        properties:
+          flavor: {get_param: flavor}
+          image: {get_param: image}
+          key_name: {get_param: key_name}
+          pool_id: xxoo
+          metadata: {"metering.stack": {get_param: "OS::stack_id"}}
+          db2_server_name: db2_server
+          scheduler_hints: '[">=","$mem", "10"]'
+          nameserver: { get_param: nameserver }
+          chef_server_url: { get_param: chef_server_url }	
+          private_net_id: {get_param: private_net_id}
 
   web_server_scaleup_policy:
     type: OS::Heat::ScalingPolicy
