@@ -5,30 +5,32 @@
         <ego:Command>egodocker.py</ego:Command>
         <ego:EnvironmentVariable name="OS_CONTEXT">ctxt_content</ego:EnvironmentVariable>
         <ego:Docker>
-            <ego:DockerNetwork>
-                <ego:DockerNetworkType>Neutron</ego:DockerNetworkType>
-                <ego:DockerNetworkVariables name="NetworkID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:DockerNetworkVariables>
-                <ego:DockerNetworkVariables name="SubNetID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:DockerNetworkVariables>
-            </ego:DockerNetwork>
-            <ego:DockerContainer>
-                <ego:DockerContainerName>myContainer1</ego:DockerContainerName>
-                <ego:DockerContainerImage>dockerfile/db2</ego:DockerContainerImage>
-                <ego:DockerContainerRegistryURL>imgeURL1</ego:DockerContainerRegistryURL>
-                <ego:DockerContainerCPUShares>2</ego:DockerContainerCPUShares>
-                <ego:DockerContainerMemoryLimit>1024</ego:DockerContainerMemoryLimit>
-                <ego:DockerContainerVolume>
-                    <ego:DockerContainerVolumesHostDir>/host/container1</ego:DockerContainerVolumesHostDir>
-                    <ego:DockerContainerdir>/Container</ego:DockerContainerdir>
-                </ego:DockerContainerVolume>
-                <ego:DockerContainerVolume>
-                    <ego:DockerContainerVolumesHostDir>/host/container2</ego:DockerContainerVolumesHostDir>
-                    <ego:DockerContainerdir>/Container</ego:DockerContainerdir>
-                </ego:DockerContainerVolume>
-                <ego:DockerContainerPort>7777</ego:DockerContainerPort>
-                <ego:DockerContainerPort>8888</ego:DockerContainerPort>
-                <ego:DockerConatinerEnvironmentvariable name="Name1">value1</ego:DockerConatinerEnvironmentvariable>
-                <ego:DockerConatinerEnvironmentvariable name="Name2">value2</ego:DockerConatinerEnvironmentvariable>
-            </ego:DockerContainer>
+            <ego:Sharedproperties>
+                <ego:DockerNetwork>
+                    <ego:NetworkType>Neutron
+                    <ego:Variable name="NetworkID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:Variable>
+                    <ego:Variable name="SubNetID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:Variable>
+                    <ego:DockerContainer>
+                        <ego:Name>myContainer1</ego:Name>
+                        <ego:Image>dockerfile/db2</ego:Image>
+                        <ego:ImageRegistryURL>imgeURL1</ego:ImageRegistryURL>
+                        <ego:CPUShares>2</ego:CPUShares>
+                        <ego:MemoryLimit>1024</ego:MemoryLimit>
+                        <ego:Volume>
+                            <ego:HostDir>/host/container1</ego:HostDir>
+                            <ego:Containerdir>/Container</ego:Containerdir>
+                        </ego:Volume>
+                        <ego:Volume>
+                            <ego:HostDir>/host/container2</ego:HostDir>
+                            <ego:Containerdir>/Container</ego:Containerdir>
+                        </ego:Volume>
+                        <ego:PublishedPort>7777</ego:PublishedPort>
+                        <ego:PublishedPort>8888</ego:PublishedPort>
+                        <ego:Environmentvariable name="Name1">value1</ego:Environmentvariable>
+                        <ego:Environmentvariable name="Name2">value2</ego:Environmentvariable>
+                    </ego:DockerContainer></ego:NetworkType>
+                </ego:DockerNetwork>
+            </ego:Sharedproperties>
         </ego:Docker>
     </ego:ActivitySpecification>
 </sc:ActivityDescription>
