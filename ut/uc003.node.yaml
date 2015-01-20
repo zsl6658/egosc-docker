@@ -36,8 +36,8 @@ resources:
           ports:
             - container_port: 9080
           volume_mounts:
-            - name: www-data
-              mount_path: /srv/www
+            - host_dir: /mnt/share/db2
+              container_dir: /srv/db2
           env:
             - name: DB2SERVERNAME
               value: { get_param: db2_server_name }
@@ -50,10 +50,6 @@ resources:
           memory: 200
           cpu: 2
           volume_mounts:
-            - name: www-data
-              mount_path: /data
-      volumes:
-        - name: string
-          source: EmptyDir 
-          path: /
+            - host_dir: /mnt/share/db2
+              container_dir: /srv/db2
       network_id: {get_param: private_net_id}
