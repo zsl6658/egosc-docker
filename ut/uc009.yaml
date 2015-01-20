@@ -43,14 +43,11 @@ resources:
           image: dockerfile/nginx
           cpu: 1
           memory: 512000
-          stdout_file: /tmp/out.log
-          stderr_file: /tmp/err.log
-          scheduler_hints: {get_param: scheduler_hints}
           ports:
             - containerPort: 9080
           volumeMounts:
-            - name: www-data
-              mountPath: /srv/www
+            - host_dir: /mnt/share/db2
+              container_dir: /srv/db2
           env:
             - name: DB2SERVERNAME
               value: { get_param: db2_server_name }
@@ -58,8 +55,4 @@ resources:
               value: { get_param: nameserver }
             - name: chef_server_url
               value: { get_param: chef_server_url }
-      volumes:
-        - name: string
-          source: emptyDir 
-          emptyDir: {}
       network_id: {get_param: private_net_id}
