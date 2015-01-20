@@ -2,35 +2,34 @@
 <sc:ActivityDescription>
     <ego:Attribute name="hostType" type="xsd:string">all</ego:Attribute>
     <ego:ActivitySpecification>
-        <ego:Command>egodocker.py</ego:Command>
         <ego:EnvironmentVariable name="OS_CONTEXT">ctxt_content</ego:EnvironmentVariable>
         <ego:Docker>
             <ego:Sharedproperties>
                 <ego:DockerNetwork>
-                    <ego:NetworkType>Neutron
+                    <ego:NetworkType>Neutron</ego:NetworkType>
                     <ego:Variable name="NetworkID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:Variable>
                     <ego:Variable name="SubNetID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:Variable>
-                    <ego:DockerContainer>
-                        <ego:Name>myContainer1</ego:Name>
-                        <ego:Image>dockerfile/db2</ego:Image>
-                        <ego:ImageRegistryURL>imgeURL1</ego:ImageRegistryURL>
-                        <ego:CPUShares>2</ego:CPUShares>
-                        <ego:MemoryLimit>1024</ego:MemoryLimit>
-                        <ego:Volume>
-                            <ego:HostDir>/host/container1</ego:HostDir>
-                            <ego:Containerdir>/Container</ego:Containerdir>
-                        </ego:Volume>
-                        <ego:Volume>
-                            <ego:HostDir>/host/container2</ego:HostDir>
-                            <ego:Containerdir>/Container</ego:Containerdir>
-                        </ego:Volume>
-                        <ego:PublishedPort>7777</ego:PublishedPort>
-                        <ego:PublishedPort>8888</ego:PublishedPort>
-                        <ego:Environmentvariable name="Name1">value1</ego:Environmentvariable>
-                        <ego:Environmentvariable name="Name2">value2</ego:Environmentvariable>
-                    </ego:DockerContainer></ego:NetworkType>
                 </ego:DockerNetwork>
             </ego:Sharedproperties>
+            <ego:DockerContainer>
+                <ego:Name>myContainer1</ego:Name>
+                <ego:Image>dockerfile/db2</ego:Image>
+                <ego:ImageRegistryURL>imgeURL1</ego:ImageRegistryURL>
+                <ego:CPUShares>2</ego:CPUShares>
+                <ego:MemoryLimit>1024</ego:MemoryLimit>
+                <ego:Volume>
+                    <ego:HostDir>/host/container1</ego:HostDir>
+                    <ego:Containerdir>/Container</ego:Containerdir>
+                </ego:Volume>
+                <ego:Volume>
+                    <ego:HostDir>/host/container2</ego:HostDir>
+                    <ego:Containerdir>/Container</ego:Containerdir>
+                </ego:Volume>
+                <ego:PublishedPort>7777</ego:PublishedPort>
+                <ego:PublishedPort>8888</ego:PublishedPort>
+                <ego:Environmentvariable name="Name1">value1</ego:Environmentvariable>
+                <ego:Environmentvariable name="Name2">value2</ego:Environmentvariable>
+            </ego:DockerContainer>
         </ego:Docker>
     </ego:ActivitySpecification>
 </sc:ActivityDescription>
