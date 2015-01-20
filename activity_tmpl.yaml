@@ -13,8 +13,8 @@ resources:
           ports:
             - container_port: 8083
           volume_mounts:
-            - name: db-data
-              mount_path: /srv/db2
+            - host_dir: /mnt/share/db2
+              container_dir: /srv/db2
           env:
             - name: key_name
               value: value1
@@ -22,10 +22,6 @@ resources:
               value: value2
             - name: chef_server_url
               value: value3
-      volumes:
-        - name: db-data
-          source: HostDir
-          path: /mnt/share/db2
       control_policy:
         host_failover_intervel: 60
         failover_fencing: '$fencing_script_path'
