@@ -44,8 +44,8 @@ resources:
               ports:
                 - containerPort: 8083
               volumeMounts:
-                - name: db-data
-                  mountPath: /srv/db2
+                - host_dir: /mnt/share/db2
+                  container_dir: /srv/db2
               env:
                 - name: key_name
                   value: {get_param: key_name}
@@ -54,20 +54,11 @@ resources:
                 - name: chef_server_url
                   value: { get_param: chef_server_url }
               network_id: {get_param: private_net_id}
-              stdout_file: '/tmp/a'
-              stderr_file: '/tmp/b'
-          volumes:
-            - name: db-data
-              source: HostDir
-              hostDir:
-                path: /mnt/share/db2
           control_policy:
             host_failover_intervel: 60
             failover_fencing: '$fencing_script_path'
             failover_fencing_wait_period: 120
-          scheduler_hints: '[">=","$free_ram_mb",1024, "==","$name", "host1"]'
-          monitor: '/opt/bin/Monitor.sh'
-          monitor_max_update_interval: 60
+          scheduler_hints: {resource_requirement: '[">=","$free_ram_mb",1024, "==","$name", "host1"]'}
 
   web_server_scaleup_policy:
     type: OS::Heat::ScalingPolicy
