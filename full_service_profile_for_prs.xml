@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sc:ServiceDefinition ServiceName="x25-my-activity" xmlns:ego="http://www.platform.com/ego/2005/05/schema" xmlns:sc="http://www.platform.com/ego/2005/05/schema/sc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.platform.com/ego/2005/05/schema/sc ../sc.xsd http://www.platform.com/ego/2005/05/schema ../ego.xsd">
+    <sc:Version>1.2</sc:Version>
+    <sc:Type>ASC</sc:Type>
+    <sc:Priority>1</sc:Priority>
+    <sc:Description>EGO Service Activity</sc:Description>
+    <sc:MinInstances>1</sc:MinInstances>
+    <sc:MaxInstances>1</sc:MaxInstances>
+    <sc:MaxInstancesPerSlot>1</sc:MaxInstancesPerSlot>
+    <sc:NeedCredential>FALSE</sc:NeedCredential>
+    <sc:ControlPolicy>
+        <sc:StartType>AUTOMATIC</sc:StartType>
+        <sc:ServiceFailoverFencingWaitPeriod>PT120S</sc:ServiceFailoverFencingWaitPeriod>
+        <sc:ServiceFailoverFencing>$fencing_script_path</sc:ServiceFailoverFencing>
+        <sc:BlockHostExitValues>
+            <sc:ExitValue>1</sc:ExitValue>
+            <sc:ExitValue>255</sc:ExitValue>
+        </sc:BlockHostExitValues>
+    </sc:ControlPolicy>
+    <sc:AllocationSpecification>
+        <ego:ConsumerID>/ClusterServices/EGOClusterServices</ego:ConsumerID>
+        <ego:KeepBlockHostList>host1;host2;</ego:KeepBlockHostList>
+        <sc:ResourceSpecification ResourceType="http://www.platform.com/ego/2005/05/schema/ce">
+            <ego:ResourceGroupName>InternalResourceGroup</ego:ResourceGroupName>
+            <ego:ResourceRequirement>select(($mem&gt;=10)&amp;&amp;($ncpus&gt;=1))</ego:ResourceRequirement>
+            <ego:ResourceType></ego:ResourceType>
+        </sc:ResourceSpecification>
+    </sc:AllocationSpecification>
+    <sc:ActivityDescription>
+        <ego:Attribute name="hostType" type="xsd:string">all</ego:Attribute>
+        <ego:ActivitySpecification>
+            <ego:EnvironmentVariable name="OS_CONTEXT">ctxt_content</ego:EnvironmentVariable>
+            <ego:Docker>
+                <ego:Sharedproperties>
+                    <ego:DockerNetwork>
+                        <ego:NetworkType>Neutron</ego:NetworkType>
+                        <ego:Variable name="NetworkID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:Variable>
+                        <ego:Variable name="SubNetID">620b4e9-d842-4e41-80c0-31c4bb18cd38</ego:Variable>
+                    </ego:DockerNetwork>
+                </ego:Sharedproperties>
+                <ego:DockerContainer>
+                    <ego:Name>myContainer1</ego:Name>
+                    <ego:Image>dockerfile/db2</ego:Image>
+                    <ego:ImageRegistryURL>imgeURL1</ego:ImageRegistryURL>
+                    <ego:CPUShares>2</ego:CPUShares>
+                    <ego:MemoryLimit>1024</ego:MemoryLimit>
+                    <ego:Volume>
+                        <ego:HostDir>/host/container1</ego:HostDir>
+                        <ego:Containerdir>/Container</ego:Containerdir>
+                    </ego:Volume>
+                    <ego:Volume>
+                        <ego:HostDir>/host/container2</ego:HostDir>
+                        <ego:Containerdir>/Container</ego:Containerdir>
+                    </ego:Volume>
+                    <ego:PublishedPort>7777</ego:PublishedPort>
+                    <ego:PublishedPort>8888</ego:PublishedPort>
+                    <ego:Environmentvariable name="Name1">value1</ego:Environmentvariable>
+                    <ego:Environmentvariable name="Name2">value2</ego:Environmentvariable>
+                </ego:DockerContainer>
+            </ego:Docker>
+        </ego:ActivitySpecification>
+    </sc:ActivityDescription>
+</sc:ServiceDefinition>
