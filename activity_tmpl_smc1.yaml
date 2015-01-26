@@ -1,0 +1,17 @@
+heat_template_version: 2013-05-23
+description: EGO activity template to show a complete use case with all possible parameters
+
+resources:
+  my_activity:
+    type: IBMInc::EGO::Activity
+    properties:
+      containers:
+        - name: "db2"
+          image: dockerfile/db2
+          cpu: 1
+          memory: 1024
+          ports:
+            - container_port: 8083
+      control_policy:
+        host_failover_intervel: 60
+      scheduler_hints: {resource_requirement: '[">=","$mem", "10", ">=","$ncpus", "1"]'}
