@@ -1,0 +1,47 @@
+Properties
+  scheduler_hints: String
+    Arbitrary key-value pairs specified by the client to help create an activity.
+    Cannot update.
+    Optional property.
+  containers : List
+    Define one or more Docker containers.
+    Required property.
+    List contents:
+      * : Map
+      Map properties:
+        name: String
+          Container name.
+          Cannot update.
+          Required property.
+        image: String
+          docker container image.
+          Cannot update.
+          Required property.
+        cpu: Number
+          CPU number this container needs.
+          Cannot update.
+          Optional property.
+        memory: Number
+          Memory size the container needs, measured by MB.
+          Cannot update.
+          Required property.
+        ports: List
+            Ports number the container export.
+            Optional property.
+            List contents:
+              * : Map
+              Map properties:
+                container_port: String
+                  Docker container port.
+                  Cannot update.
+                  Required property.
+                  Allowed value: [1024, 65535]
+  control_policy : Map
+    EGO Service Controller Policy.
+    Optional property.
+    Map properties:
+      host_failover_intervel: Number
+        Specifies the length of time to wait after a host fails until the service should be restarted on another host in seconds.
+        Cannot update.
+        Optional property.
+        Allowed value: [1, 3600]
